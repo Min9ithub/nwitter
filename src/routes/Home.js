@@ -29,6 +29,7 @@ const Home = ({ userObj }) => {
     }
   };
 
+  //  Read data
   useEffect(() => {
     const q = query(collection(db, "nweets"), orderBy("createdAt", "desc"));
     onSnapshot(q, (querysnapshot) => {
