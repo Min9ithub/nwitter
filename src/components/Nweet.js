@@ -5,18 +5,19 @@ import React, { useState } from "react";
 const Nweet = ({ nweetObj, isOwner }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newNweet, setNewNweet] = useState(nweetObj.text);
+  const NweetTextRef = doc(db, "nweets", `${nweetObj.id}`);
   //   Delete data
   const onDeleteClick = async () => {
     const ok = window.confirm("Are you sure you want to delete this nweet?");
     if (ok) {
-      await deleteDoc(doc(db, "nweets", `${nweetObj.id}`));
+      await deleteDoc(NweetTextRef);
     }
   };
   // Edit data
   const toggleEditing = () => setIsEditing((prev) => !prev);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await updateDoc(doc(db, "nweets", `${nweetObj.id}`), {
+    await updateDoc(NweetTextRef, {
       text: newNweet,
     });
     setIsEditing(false);
