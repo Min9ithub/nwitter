@@ -7,14 +7,7 @@ function App() {
   const [userObj, setUserObj] = useState(null);
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-<<<<<<< HEAD
       user ? setUserObj(user) : setUserObj(null);
-=======
-      if (user) {
-        setUserObj(user);
-      } else {
-      }
->>>>>>> 3c4685d5b1eb556dd1dd939967cecc26afa190b0
       setInit(true);
     });
   }, []);
@@ -25,7 +18,6 @@ function App() {
       ) : (
         "Initializing..."
       )}
-      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   );
 }
