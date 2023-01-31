@@ -1,5 +1,6 @@
 import Nweet from "components/Nweet";
-import { db } from "fbase";
+import { v4 as uuidv4 } from "uuid";
+import { db, storage } from "fbase";
 import {
   addDoc,
   collection,
@@ -8,6 +9,7 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
+import { ref, uploadString } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
 
 const Home = ({ userObj }) => {
@@ -19,7 +21,10 @@ const Home = ({ userObj }) => {
   // Add data
   const onSubmit = async (event) => {
     event.preventDefault();
-    try {
+    const fileRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
+    const response = await uploadString(fileRef, attachment, "data_url");
+    console.log(response);
+    /*try {
       await addDoc(collection(db, "nweets"), {
         text: nweet,
         createdAt: serverTimestamp(),
@@ -28,7 +33,7 @@ const Home = ({ userObj }) => {
       setNweet("");
     } catch (error) {
       console.log(error.message);
-    }
+    }*/
   };
 
   //  Read data
