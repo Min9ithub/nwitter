@@ -9,31 +9,41 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import { ref, uploadString } from "firebase/storage";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
 
 const Home = ({ userObj }) => {
   //   console.log(userObj);
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   const fileInput = useRef();
   // Add data
   const onSubmit = async (event) => {
     event.preventDefault();
-    const fileRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
-    const response = await uploadString(fileRef, attachment, "data_url");
-    console.log(response);
-    /*try {
-      await addDoc(collection(db, "nweets"), {
-        text: nweet,
-        createdAt: serverTimestamp(),
-        creatorId: userObj.uid,
-      });
+    let attachmentUrl = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
+    }
+    const nweetObj = {
+      text: nweet,
+      createdAt: serverTimestamp(),
+      creatorId: userObj.uid,
+      attachmentUrl,
+    };
+    try {
+      await addDoc(collection(db, "nweets"), nweetObj);
       setNweet("");
+      setAttachment("");
     } catch (error) {
       console.log(error.message);
-    }*/
+    }
   };
 
   //  Read data
@@ -72,7 +82,7 @@ const Home = ({ userObj }) => {
 
   const onClearAttachment = () => {
     fileInput.current.value = "";
-    setAttachment(null);
+    setAttachment("");
   };
 
   return (
