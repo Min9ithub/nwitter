@@ -7,7 +7,13 @@ function App() {
   const [userObj, setUserObj] = useState(null);
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      user ? setUserObj(user) : setUserObj(null);
+      if (user) {
+        if (user.displayName === null) {
+          const name = user.email.split("@")[0];
+          user.displayName = name;
+        }
+        setUserObj(user);
+      }
       setInit(true);
     });
   }, []);
